@@ -1,8 +1,17 @@
 
+import { Usuario } from "../db/models/usuario.model.js"
+import jwt from 'jsonwebtoken'
+import { JWT_SECRET } from "../config/config.js";
+
+
+
+
+
 
 // Admin
 
 export const AdminMiddleware = async (req, res, next) => {
+    console.log('🛡️ Entrando a AdminMiddleware');
 
     const token = req.header('Authorization')?.replace('Bearer ', '')
 
@@ -14,12 +23,14 @@ export const AdminMiddleware = async (req, res, next) => {
     try {
 
         //1.Verificamos token 
-        const decoded = jwt.verify(token, JWT_SECRET)
+        const decoded = jwt.verify(token, JWT_SECRET);
+        console.log('Token decodificado:', decoded);
         req.userId = decoded.userId;
 
 
         //2.Buscar usuario y verificar su rol
         const usuario = await Usuario.findById(decoded.userId)
+        console.log('Usuario encontrado:', usuario); 
 
         if (!usuario || usuario.role !== 'admin') {
 
@@ -33,7 +44,7 @@ export const AdminMiddleware = async (req, res, next) => {
 
 
     } catch (e) {
-
+        console.error('Error al verificar token:', e);
         res.status(401).json({ message: 'Acceso denegado, token expirado o inválido' })
     }
 

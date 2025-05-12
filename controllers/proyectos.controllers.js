@@ -42,15 +42,15 @@ export const getAllProyectos = async (req, res, next) => {
 //Obtener un proyecto
 export const getProyecto = async (req, res, next) => {
 
-    const { id } = req.params
+    const { pid } = req.params
 
 
 
     try {
 
-        const proyecto = await Proyectos.findById(id);
+        const proyecto = await Proyectos.findById(pid);
         responseAPI.data = proyecto;
-        responseAPI.msg = `Proyecto con id ${id} encontrado con éxito`
+        responseAPI.msg = `Proyecto con id ${pid} encontrado con éxito`
         responseAPI.status = 'ok';
 
         res.status(200).json(responseAPI)

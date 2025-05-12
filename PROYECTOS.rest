@@ -1,0 +1,15 @@
+
+@dominio = http://localhost:3003
+//Crear admin 
+
+
+POST {{dominio}}/api/v1/admin/register
+Content-Type: application/json
+
+{
+
+    "email": "admin@gmail.com",
+    "password": "admin1233",
+    "repeatPassword":"admin1233",
+ 
+}

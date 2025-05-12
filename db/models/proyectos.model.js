@@ -17,7 +17,9 @@ const options = {
 const proyectosSchema = new mongoose.Schema({
 
 
-    imagen: String, 
+    imagenes:[String], 
+
+    portada: String,
 
     nombre: String,
 

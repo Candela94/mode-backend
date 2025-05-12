@@ -8,6 +8,8 @@ import { Proyectos } from "../db/models/proyectos.model.js";
 import { loginUser, registerUser } from "../controllers/auth.controller.js";
 import { getAllProyectos, getProyecto } from "../controllers/proyectos.controllers.js";
 
+import { BACKEND_URL } from "../config/config.js";
+
 
 
 
@@ -16,8 +18,9 @@ const router = Router()
 
 
 //Ruta para subida de imágenes
-router.post('/admin/uploads', AdminMiddleware, uploadFiles.fields([
-    { name: 'imgprod' }
+router.post('/admin/proyectos', AdminMiddleware, uploadFiles.fields([
+    { name: 'portada', maxCount:1 },
+    {name: 'imagenes'}
 
 
 ]), async (req, res, next) => {
@@ -25,29 +28,31 @@ router.post('/admin/uploads', AdminMiddleware, uploadFiles.fields([
     try {
 
 
-        if (!req.files || !req.files.imgprod ) {
+        if (!req.files || !req.files.portada || !req.files.imagenes) {
             return res.status(400).json({
                 success: false,
-                message: "No se ha proporcionado ninguna imagen"
+                message: "Faltan imágebes"
             })
         }
 
+        const portadaFile = req.files.portada[0];
+        const imagenesFiles = req.files.imagenes;
 
 
+     
 
-        console.log(req.files);
+        const imagenesUrl = imagenesFiles.map(file => `${BACKEND_URL}/uploads/imagenes/${file.filename}`)
+        const portadaUrl = `${BACKEND_URL}/uploads/imagenes/${portadaFile.filename}`;
 
-        const imageUrl = `${BACKEND_URL}/uploads/imagenes/${req.file.imgprod[0].filename}`
-      
 
-        //Creamos canción en la base de datos 
+        //Creamos proyecto en la base de datos 
         const proyecto = await Proyectos.create({
 
-            imagen: imageUrl,
-        
+            imagenes: imagenesUrl,
+            portada: portadaUrl,
             nombre: req.body.nombre,
 
-            descripcion: req.body.descripcion
+          
            
 
         })
@@ -57,10 +62,11 @@ router.post('/admin/uploads', AdminMiddleware, uploadFiles.fields([
 
         return res.status(200).json({
             success: "ok",
-            message: "Imagen subida con éxito :)",
+            message: "Imagenes subida con éxito :)",
             data: proyecto,
             fileData: {
-                imageUrl: imageUrl,
+                portada: portadaUrl,
+                imagenes: imagenesUrl
            
                 //peso:`${Math.round(req.file.size/1024)}`,
                 //size:"500kb"
@@ -79,7 +85,7 @@ router.post('/admin/uploads', AdminMiddleware, uploadFiles.fields([
 
 })
 
-
+ 
 
 //Login y registro ADMIN 
 

@@ -25,7 +25,7 @@ export const registerUser = async (req, res, next) => {
 
 
         //1. Traer los datos del body
-        const { email, password, name, username } = req.body
+        const { email, password } = req.body
 
 
 
@@ -50,8 +50,9 @@ export const registerUser = async (req, res, next) => {
         const user = new Usuario({
             email,
             password: hashedPassword,
-            name,
-            username
+            role:'admin'
+          
+           
         });
         await user.save()
 
@@ -64,6 +65,7 @@ export const registerUser = async (req, res, next) => {
             {
                 userId: user._id,
                 name: user.name,
+                role: user.role
 
             },
 
@@ -85,9 +87,10 @@ export const registerUser = async (req, res, next) => {
             token,
             user: {
                 id: user._id,
-                name: user.name,
+                role:user.role,
+               
                 email: user.email,
-                username: user.username
+               
             }
         })
 
