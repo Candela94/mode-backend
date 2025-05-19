@@ -10,6 +10,6 @@ Content-Type: application/json
 
     "email": "admin@gmail.com",
     "password": "admin1233",
-    "repeatPassword":"admin1233",
+    "repeatPassword":"admin1233"
  
 }
