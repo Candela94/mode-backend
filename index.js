@@ -18,7 +18,20 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 
-app.use(cors())
+const whitelist = ['http://localhost:5173', 'https://tu-app.vercel.app'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || whitelist.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('No permitido por CORS'))
+    }
+  },
+  credentials: true
+}));
+
+  
 
 
 
