@@ -10,4 +10,7 @@ export const DATABASE = process.env.DATABASE ||  "mode"
  export const JWT_SECRET = process.env.JWT_SECRET ||  "Et34WzL=fh5QoVw"
 
 
+ export const URL_LOCAL=process.env.URL_LOCAL || "http://localhost:3003"
+
+
  export const DB_MONGODB = process.env.DB_MONGODB || "mongodb+srv://candelafsg:Juanotee77@cei-practicas.k3hx5.mongodb.net/mode?retryWrites=true&w=majority&appName=CEI-PRACTICAS"

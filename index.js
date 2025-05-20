@@ -5,7 +5,7 @@
 import express from 'express'
 
 
-import { PORT, BACKEND_URL} from './config/config.js'
+import { PORT, BACKEND_URL, URL_LOCAL} from './config/config.js'
 import router from './routes/index.routes.js'
 import { conectarDB } from './db/mongoose.js'
 
@@ -45,3 +45,7 @@ app.use("/api/v1", router)
 app.listen( PORT , () => {
     console.log(`Servidor funcionando en ${BACKEND_URL}`)
 })
+
+// app.listen( PORT , () => {
+//     console.log(`Servidor funcionando en ${URL_LOCAL}`)
+// })
