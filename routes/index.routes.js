@@ -14,6 +14,7 @@ import { BACKEND_URL } from "../config/config.js";
 import { v2 as cloudinary } from "cloudinary";
 
 import { config } from "dotenv";
+import fs from 'fs'
 
 
 config() //cargar variables de entorno
@@ -21,7 +22,9 @@ config() //cargar variables de entorno
 
 //configuramos cloudinary 
 cloudinary.config({
-    cloudinary_url: process.env.CLOUDINARY_URL
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 
 })
 
@@ -67,8 +70,17 @@ router.post('/admin/proyectos', AdminMiddleware, uploadFiles.fields([
 
 
       // Eliminar los archivos temporales después de subirlos
-      req.files.portada.forEach(file => fs.unlinkSync(file.path));  // Eliminar archivo de portada
-      req.files.imagenes.forEach(file => fs.unlinkSync(file.path));  // Eliminar archivos de imágenes
+      try {
+        fs.unlinkSync(portadaFile.path); // Eliminar archivo de portada
+        
+        // Eliminar archivos de imágenes
+        for (const img of imagenesFiles) {
+            fs.unlinkSync(img.path);
+        }
+    } catch (error) {
+        console.error("Error al eliminar archivos temporales:", error);
+        // Continuamos con la ejecución aunque falle la eliminación de archivos temporales
+    }
 
         //Creamos proyecto en la base de datos 
         const proyecto = await Proyectos.create({
