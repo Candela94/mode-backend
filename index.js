@@ -18,20 +18,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 
-const whitelist = ['http://localhost:5173', 'https://tu-app.vercel.app'];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || whitelist.includes(origin)) {
-      callback(null, true)
-    } else {
-      callback(new Error('No permitido por CORS'))
-    }
-  },
-  credentials: true
-}));
-
-  
+app.use(cors())
 
 
 
@@ -39,19 +26,6 @@ app.use(cors({
 app.use('/uploads', express.static('public/uploads'))
 app.use('/web', express.static('public'))
 
-// app.get("/", (req,res,next) => {
-//     res.setHeader("Content-Type", "text/html")
-
-//     const pageHTML = `
-    
-//     <h1> Bienvenidx a SOUNDsLIKE :) </h1>
-    
-
-    
-//     `
-
-//     res.send(pageHTML)
-// })
 
 
 

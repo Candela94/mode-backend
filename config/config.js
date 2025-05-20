@@ -1,5 +1,5 @@
 
-export const BACKEND_URL = process.env.BACKEND_URL || 'https://mode-backend.vercel.app'
+export const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3003'
 export const PORT = process.env.PORT || '3003'
 
 export const DB_USER =  process.env.DB_USER || "candelafsg"
