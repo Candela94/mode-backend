@@ -11,6 +11,20 @@ import { getAllProyectos, getProyecto } from "../controllers/proyectos.controlle
 import { BACKEND_URL } from "../config/config.js";
 
 
+import { v2 as cloudinary } from "cloudinary";
+
+import { config } from "dotenv";
+
+
+config() //cargar variables de entorno
+
+
+//configuramos cloudinary 
+cloudinary.config({
+    cloudinary_url: process.env.CLOUDINARY_URL
+
+})
+
 
 
 
@@ -31,7 +45,7 @@ router.post('/admin/proyectos', AdminMiddleware, uploadFiles.fields([
         if (!req.files || !req.files.portada || !req.files.imagenes) {
             return res.status(400).json({
                 success: false,
-                message: "Faltan imágebes"
+                message: "Faltan imágenes"
             })
         }
 
@@ -39,17 +53,28 @@ router.post('/admin/proyectos', AdminMiddleware, uploadFiles.fields([
         const imagenesFiles = req.files.imagenes;
 
 
-     
+     const portadaResult = await cloudinary.uploader.upload(portadaFile.path, {
+        folder:'mode/portadas'
+     })
 
-        const imagenesUrl = imagenesFiles.map(file => `${BACKEND_URL}/uploads/imagenes/${file.filename}`)
-        const portadaUrl = `${BACKEND_URL}/uploads/imagenes/${portadaFile.filename}`;
+     const imagenesUrl = [];
+     for (const img of imagenesFiles) {
+         const result = await cloudinary.uploader.upload(img.path, {
+             folder: 'mode/imagenes'  // Especificar un folder para las otras imágenes
+         });
+         imagenesUrl.push(result.secure_url);  // Guardar la URL segura de Cloudinary
+     }
 
+
+      // Eliminar los archivos temporales después de subirlos
+      req.files.portada.forEach(file => fs.unlinkSync(file.path));  // Eliminar archivo de portada
+      req.files.imagenes.forEach(file => fs.unlinkSync(file.path));  // Eliminar archivos de imágenes
 
         //Creamos proyecto en la base de datos 
         const proyecto = await Proyectos.create({
 
             imagenes: imagenesUrl,
-            portada: portadaUrl,
+            portada: portadaResult.secure_url,
             nombre: req.body.nombre,
 
           
@@ -65,7 +90,7 @@ router.post('/admin/proyectos', AdminMiddleware, uploadFiles.fields([
             message: "Imagenes subida con éxito :)",
             data: proyecto,
             fileData: {
-                portada: portadaUrl,
+                portada: portadaResult.secure_url,
                 imagenes: imagenesUrl
            
                 //peso:`${Math.round(req.file.size/1024)}`,
