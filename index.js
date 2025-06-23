@@ -42,10 +42,10 @@ app.get("/", (req, res, next) => {
 
 conectarDB();
 
-app.use("/", router)
+app.use("/api/v1", router)
 
 
-app.listen( PORT , () => {
+app.listen( PORT ,'0.0.0.0', () => {
     console.log(`Servidor funcionando en ${BACKEND_URL}`)
 })
 
