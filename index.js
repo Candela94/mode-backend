@@ -36,6 +36,7 @@ app.use('/web', express.static('public'))
 
 
 app.get("/", (req, res, next) => {
+    console.log("Ruta raíz llamada en Railway!")
     res.send("Bienvenido a MODE :)")
 })
 
