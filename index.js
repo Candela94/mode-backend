@@ -42,7 +42,7 @@ app.get("/", (req, res, next) => {
 
 conectarDB();
 
-app.use("/api/v1", router)
+app.use("/", router)
 
 
 app.listen( PORT , () => {
